@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Call {
+  id           String    @id @default(uuid())
+  from         String
+  to           String
+  apiKey       String
+  metadata     Json?
+  state        CallState
+  answered     Boolean?
+  recordingUrl String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  uploads      Upload[]
+}
+
+model Upload {
+  id        String   @id @default(uuid())
+  callId    String
+  url       String
+  createdAt DateTime @default(now())
+  call      Call     @relation(fields: [callId], references: [id])
+}
+
+enum CallState {
+  QUEUED
+  RINGING
+  ANSWERED
+  UNANSWERED
+  COMPLETED
+}

@@ -1,0 +1,40 @@
+{
+  "name": "calling-platform-backend",
+  "version": "1.0.0",
+  "description": "Async REST + WebSocket calling platform backend",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "worker": "tsx src/worker.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "start:worker": "node dist/worker.js",
+    "test": "vitest --run",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:deploy": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "bullmq": "^5.7.11",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ioredis": "^5.3.2",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^24.10.1",
+    "@types/supertest": "^6.0.3",
+    "@types/ws": "^8.18.1",
+    "prisma": "^5.18.0",
+    "supertest": "^7.1.4",
+    "tsx": "^4.19.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.10"
+  }
+}

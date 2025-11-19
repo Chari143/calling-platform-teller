@@ -1,3 +1,4 @@
+// Express types
 declare global {
   namespace Express {
     interface Request {

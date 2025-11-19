@@ -1,6 +1,7 @@
 import { redis } from "./redis.js";
 import { CONCURRENCY_LIMIT, CPS_LIMIT } from "./config.js";
 
+// get Concurrency 
 export async function getConcurrency(apiKey: string, callId: string) {
   const countKey = `active_count:${apiKey}`;
   const setKey = `active:${apiKey}`;
@@ -14,6 +15,7 @@ export async function getConcurrency(apiKey: string, callId: string) {
   return true;
 }
 
+// Concurrency release
 export async function releaseConcurrency(apiKey: string, callId: string) {
   const countKey = `active_count:${apiKey}`;
   const setKey = `active:${apiKey}`;
@@ -21,6 +23,7 @@ export async function releaseConcurrency(apiKey: string, callId: string) {
   await redis.decr(countKey);
 }
 
+// CPS limit
 export async function checkCpsLimit(apiKey: string) {
   const second = Math.floor(Date.now() / 1000);
   const key = `cps:${apiKey}:${second}`;

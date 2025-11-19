@@ -17,7 +17,7 @@ app.use(auth);
 const uploadsPath = path.join(process.cwd(), UPLOADS_DIR);
 if (!fs.existsSync(uploadsPath)) fs.mkdirSync(uploadsPath);
 
-//for uploads
+// for uploads
 app.use("/uploads", express.static(uploadsPath));
 app.use(callsRouter);
 app.use(metricsRouter);
@@ -26,6 +26,8 @@ const server = createServer(app);
 initWebSocket(server);
 
 async function startServer() {
+  // DB connect
+  // Redis connect
   await db();
   await redisConnect();
   server.listen(PORT, () => {});

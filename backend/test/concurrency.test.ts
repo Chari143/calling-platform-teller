@@ -1,4 +1,4 @@
-process.env.CPS_LIMIT = "1";
+process.env.CPS_LIMIT = "2";
 import { describe, it, expect } from "vitest";
 import request from "supertest";
 import { app } from "../src/index.js";

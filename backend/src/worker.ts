@@ -14,8 +14,10 @@ const connection = { url: REDIS_URL } as const;
 type StateJob = { id: string };
 type UploadJob = { id: string };
 
+// Worker connection
 await db();
 
+// State worker
 const stateWorker = new Worker<StateJob>("call-state", async (job) => {
   const id = job.data.id;
   const existing = await prisma.call.findUnique({ where: { id } });
@@ -41,6 +43,7 @@ const stateWorker = new Worker<StateJob>("call-state", async (job) => {
   }
 }, { connection });
 
+// Upload worker
 const uploadWorker = new Worker<UploadJob>("upload", async (job) => {
   const id = job.data.id;
   const filename = `${id}.mp3`;
@@ -56,12 +59,14 @@ const uploadWorker = new Worker<UploadJob>("upload", async (job) => {
 }, { connection });
 
 async function updateState(id: string, state: "RINGING" | "COMPLETED") {
+  // Update state
   await prisma.call.update({ where: { id }, data: { state } });
   await redis.hmset(`call:${id}`, { state });
   await publish(id);
 }
 
 async function publish(id: string) {
+  // Publish event
   const call = await prisma.call.findUnique({ where: { id } });
   if (!call) return;
   const payload = JSON.stringify({ id, state: call.state, recordingUrl: call.recordingUrl });
@@ -70,6 +75,7 @@ async function publish(id: string) {
 
 export {};
 
+// Shutdown hooks
 process.on("SIGINT", async () => {
   await disconnect();
   process.exit(0);

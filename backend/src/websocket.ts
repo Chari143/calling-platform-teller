@@ -1,6 +1,7 @@
 import { Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { redisSubscriber } from "./redis.js";
+// WebSocket server
 
 type ClientInfo = { apiKey: string; callId: string };
 
@@ -22,6 +23,7 @@ export function initWebSocket(server: Server) {
     }
     const apiKey = auth.slice(7).trim();
     wss.handleUpgrade(request, socket, head, (ws: WebSocket) => {
+      // Register client
       clients.set(ws, { apiKey, callId });
       ws.on("close", () => {
         clients.delete(ws);
@@ -29,6 +31,7 @@ export function initWebSocket(server: Server) {
     });
   });
 
+  // Subscribe events
   redisSubscriber.psubscribe("events:call:*");
   redisSubscriber.on("pmessage", (_pattern: string, channel: string, message: string) => {
     const parts = channel.split(":");

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+// Auth middleware
 
 export function auth(req: Request, res: Response, next: NextFunction) {
   const auth = req.header("authorization") || req.header("Authorization");
